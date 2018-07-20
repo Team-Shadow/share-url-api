@@ -2,6 +2,20 @@ const User = require('../model/user_schema')
 const axios = require('axios')
 
 /**
+ * 中间件，需要登入
+ */
+exports.need = async (ctx, next) => {
+    if (ctx.session.user) {
+        ctx.state.user = ctx.session.user
+        await next()
+    } else {
+        return ctx.body = {
+            login: true
+        }
+    }
+}
+
+/**
  * 获取当前登入用户
  */
 exports.getLoginedUser = async (ctx) => {
