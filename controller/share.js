@@ -1,6 +1,17 @@
 const Url = require('../model/url_schema')
 const User = require('../model/user_schema')
 const only = require('only')
+
+/**
+ * 查询详情
+ */
+exports.findOne = async (ctx) => {
+    let id = ctx.params.urlId
+    ctx.body = {
+        data: await Url.findOne({ _id: id }).populate({ path: 'author', select: 'id name' })
+    }
+}
+
 /**
  * 分享链接
  */

@@ -27,7 +27,7 @@ UrlSchema.statics = {
         return this.find(criteria)
             .select(select)
             .populate({path: 'author', select: 'id name'})
-            .sort({ date: -1 })
+            .sort({ createDate: -1 })
             .limit(pageSize)
             .skip((page - 1) * pageSize)
     },

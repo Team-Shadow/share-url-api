@@ -10,5 +10,6 @@ router.get('/', async ctx => {
     .delete('/api/user', user.logout) // 退出登入
     .post('/api/url', user.need, share.sendUrl) // 分享链接
     .get('/api/url', share.search) // 搜索链接
+    .get('/api/url/:urlId', share.findOne) // 查询链接详情
 
 module.exports = router.routes()
