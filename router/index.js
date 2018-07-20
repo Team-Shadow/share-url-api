@@ -9,5 +9,6 @@ router.get('/', async ctx => {
     .get('/api/user', user.getLoginedUser) // 获取当前登入用户信息
     .delete('/api/user', user.logout) // 退出登入
     .post('/api/url', user.need, share.sendUrl) // 分享链接
+    .get('/api/url', share.search) // 搜索链接
 
 module.exports = router.routes()
