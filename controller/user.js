@@ -1,6 +1,6 @@
 const User = require('../model/user_schema')
 const axios = require('axios')
-
+const {client_id, client_secret} = require('../config/github')
 /**
  * 中间件，需要登入
  */
@@ -73,8 +73,6 @@ exports.logout = async ctx => {
 /**
  * github 第三方登入
  */
-const client_id = '274df6a3dc60b0dd834c'
-const client_secret = 'e8dfc09c2a5544087f4fc01c646d3f57b302e0f5'
 exports.githubCallback = async (ctx) => {
     let code = ctx.query.code
     let { data: tokenStr } = await axios.post('https://github.com/login/oauth/access_token', {
