@@ -1,6 +1,35 @@
 const Url = require('../model/url_schema')
-const User = require('../model/user_schema')
+const MyCollection = require('../model/my_schema')
 const only = require('only')
+
+/**
+ * 查询改链接是否已收藏
+ */
+
+exports.collectionHas = async (ctx) => {
+    let query = ctx.request.query
+    let urlId = query.urlId
+    if (!urlId) ctx.throw(400, 'urlId required')
+    let user = ctx.state.user
+    let collection = await MyCollection.findOne({ author: user._id, collection_url: urlId }).select('id')
+    if (collection) {
+        ctx.body = { collection: true, data: collection }
+    } else {
+        ctx.body = { collection: false, data: collection }
+    }
+}
+
+/**
+ * 添加到收藏
+ */
+exports.addCollection = async (ctx) => {
+    let body = ctx.request.body
+    if (!body.urlId) ctx.throw(400, 'urlId required')
+    let urlId = body.urlId
+    let user = ctx.state.user
+    let ret = await MyCollection.update({ author: user._id }, { $addToSet: { collection_url: urlId } }, { upsert: true })
+    ctx.body = ret
+}
 
 /**
  * 查询详情

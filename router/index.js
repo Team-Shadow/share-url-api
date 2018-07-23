@@ -11,8 +11,10 @@ router.get('/', async ctx => {
     .post('/api/url', user.need, share.sendUrl) // 分享链接
     .get('/api/url', share.search) // 搜索链接
     .get('/api/url/:urlId', share.findOne) // 查询链接详情
-
+    .put('/api/collection', user.need, share.addCollection) // 收藏 【链接】
+    
     .post('/api/register', user.register) // 注册
     .post('/api/login', user.login) // 登入
+    .get('/api/collectioned', user.need, share.collectionHas) // 是否已收藏
 
 module.exports = router.routes()
