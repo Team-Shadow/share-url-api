@@ -20,6 +20,15 @@ exports.collectionHas = async (ctx) => {
 }
 
 /**
+ * 获取收藏夹
+ */
+exports.collection = async (ctx) => {
+    let user = ctx.state.user
+    let collection = await MyCollection.findOne({ author: user._id }).populate({path: 'collection_url', select: 'title id'})
+    ctx.body = { data: collection || new MyCollection()}
+}
+
+/**
  * 添加到收藏
  */
 exports.addCollection = async (ctx) => {
