@@ -27,11 +27,13 @@ exports.sendUrl = async (ctx) => {
 */
 exports.search = async (ctx) => {
     let query = ctx.request.query
-    let page = Number(query.page)
-    let pageSize = Number(query.pageSize)
+    let params = {}
+    params.page = Number(query.page) // 页码
+    params.pageSize = Number(query.pageSize) // 一页条数
+    if (query.criteria) { // 搜索条件
+        params.criteria = JSON.parse(query.criteria)
+    }
     ctx.body = {
-        data: await Url.search({
-            page, pageSize
-        })
+        data: await Url.search(params)
     }
 }
