@@ -16,6 +16,45 @@ exports.need = async (ctx, next) => {
 }
 
 /**
+ * 注册
+ */
+exports.register = async (ctx) => {
+    let body = ctx.request.body
+    if (!body.username) ctx.throw(400, 'username required')
+    if (!body.password) ctx.throw(400, 'password required')
+    let username = body.username
+    let password = body.password
+    let user = await User.findOne({ username })
+    if (user) {
+        ctx.body = { err: '用户已存在' }
+    } else {
+        let user = await new User({ username, password, name: username }).save()
+        ctx.session.user = user
+        ctx.body = { data: user }
+    }
+}
+
+/**
+ * 登入
+ */
+exports.login = async (ctx) => {
+    let body = ctx.request.body
+    if (!body.username) ctx.throw(400, 'username required')
+    if (!body.password) ctx.throw(400, 'password required')
+    let username = body.username
+    let password = body.password
+    let user = await User.findOne({ username })
+    if (user && user.authenticate(password)) {
+        ctx.session.user = user
+        ctx.body = { data: user }
+    } else if (user) {
+        ctx.body = { err: '密码错误' }
+    } else {
+        ctx.body = { err: '用户名不存在' }
+    }
+}
+
+/**
  * 获取当前登入用户
  */
 exports.getLoginedUser = async (ctx) => {
@@ -55,9 +94,8 @@ exports.githubCallback = async (ctx) => {
         user.github_id = githubUser.id
         user.github = githubUser
         user.name = githubUser.name
-        let ret = await user.save()
+        await user.save()
         ctx.session.user = user
-        // ctx.body = user
     }
     ctx.body = `<script>location.href = '/'</script>`
 }
